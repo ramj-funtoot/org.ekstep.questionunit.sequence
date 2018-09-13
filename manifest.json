@@ -56,7 +56,7 @@
       "thumbnail": "editor/assets/sequencial-preview.png",
       "title": "Arrange in Sequence",
       "disc": "",
-      "category": "SEQ",
+      "category": "mcq",
       "editor": {
         "templateURL": "editor/templates/seq-template.html",
         "controllerURL": "editor/controllers/seq-controller.js",

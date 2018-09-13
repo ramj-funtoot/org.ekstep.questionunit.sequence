@@ -52,6 +52,10 @@ angular.module('seqApp', ['org.ekstep.question']).controller('seqQuestionFormCon
       var validationRes = $scope.formValidation();
       callback(validationRes.isValid, validationRes.formData);
     }, $scope);
+    
+    //adds two options
+    $scope.addOption();
+    $scope.addOption();
     /**
      * editor:questionunit.sequence:call form edit the question.
      * @event org.ekstep.questionunit.sequence:editquestion
@@ -60,10 +64,6 @@ angular.module('seqApp', ['org.ekstep.question']).controller('seqQuestionFormCon
     EventBus.listeners['org.ekstep.questionunit.sequence:editquestion'] = [];
     ecEditor.addEventListener('org.ekstep.questionunit.sequence:editquestion', $scope.editSEQQuestion, $scope);
     ecEditor.dispatchEvent("org.ekstep.questionunit:ready");
-
-    //adds two options
-    $scope.addOption();
-    $scope.addOption();
   }
   /**
    * for edit flow
@@ -74,7 +74,7 @@ angular.module('seqApp', ['org.ekstep.question']).controller('seqQuestionFormCon
   $scope.editSEQQuestion = function (event, data) {
     var qdata = data.data;
     $scope.seqFormData.question = qdata.question;
-    $scope.seqFormData.option = qdata.option;
+    $scope.seqFormData.options = qdata.options;
     $scope.editMedia = qdata.media;
   }
   /**

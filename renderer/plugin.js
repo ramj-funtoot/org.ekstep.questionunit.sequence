@@ -51,7 +51,12 @@ org.ekstep.questionunitseq.RendererPlugin = org.ekstep.contentrenderer.questionU
         correctAnswer = false;
       }
     })
-    var partialScore = (correctAnswersCount / totalOptions) * this._question.config.max_score;
+    var partialScore;
+    if(this._question.config.partial_scoring){
+      partialScore = (correctAnswersCount / totalOptions) * this._question.config.max_score;
+    }else{
+      partialScore = 0;
+    }
     var result = {
       eval: correctAnswer,
       state: {
