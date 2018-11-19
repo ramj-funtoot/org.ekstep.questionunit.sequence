@@ -14,19 +14,19 @@ org.ekstep.questionunitseq.RendererPlugin = org.ekstep.contentrenderer.questionU
   _dragulaContainers: [],
   _constant: {
     horizontal: "Horizontal",
-    vertial : "Vertical"
+    vertial: "Vertical"
   },
   setQuestionTemplate: function () {
-    SEQController.initTemplate(this);// eslint-disable-line no-undef
+    SEQController.initTemplate(this); // eslint-disable-line no-undef
   },
 
   preQuestionShow: function (event) {
     this._super(event);
     this._question.template = SEQController.getQuestionTemplate(this._question.config.layout, this._constant);
-    _.each(this._question.data.options, function(option,index){
+    _.each(this._question.data.options, function (option, index) {
       option.sequenceOrder = index + 1;
     })
-    if(!this._question.state){
+    if (!this._question.state) {
       this._question.data.options = _.shuffle(this._question.data.options);
     } else {
       //BASED on the rearranged order update in seqeuence
@@ -34,21 +34,21 @@ org.ekstep.questionunitseq.RendererPlugin = org.ekstep.contentrenderer.questionU
       var reorderedOptionsIndexes = this._question.state.val.seq_rearranged;
       var newOrderedOptions = [];
       var optionsLength = renderedOptions.length;
-      for(var i = 0;i < optionsLength;i++){
-        var seqObjIndex = _.findIndex(renderedOptions, function(seqOpt){
+      for (var i = 0; i < optionsLength; i++) {
+        var seqObjIndex = _.findIndex(renderedOptions, function (seqOpt) {
           return seqOpt.sequenceOrder == reorderedOptionsIndexes[i];
         })
         newOrderedOptions[i] = renderedOptions[seqObjIndex];
       }
       this._question.data.options = newOrderedOptions;
     }
-    
+
   },
   postQuestionShow: function (event) {
     var instance = this;
     QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.ASSESS); // eslint-disable-line no-undef
   },
-  evaluateQuestion: function(event){
+  evaluateQuestion: function (event) {
     var instance = this;
     var callback = event.target;
     var correctAnswer = true;
@@ -57,28 +57,28 @@ org.ekstep.questionunitseq.RendererPlugin = org.ekstep.contentrenderer.questionU
     var seq_rearranged = [];
     var totalOptions = instance._question.data.options.length;
 
-    $('.option-block').each(function(actualSeqMapIndex, elem){
+    $('.option-block').each(function (actualSeqMapIndex, elem) {
       var telObj = {
-        'SEQ':[]
+        'SEQ': []
       };
       var selectedSeqOrder = parseInt($(elem).data('seqorder')) - 1;
       seq_rearranged[actualSeqMapIndex] = selectedSeqOrder + 1;
       telObj['SEQ'][actualSeqMapIndex] = instance._question.data.options[actualSeqMapIndex];
       telemetryValues.push(telObj);
 
-      if(selectedSeqOrder == actualSeqMapIndex){
+      if (selectedSeqOrder == actualSeqMapIndex) {
         correctAnswersCount++;
       } else {
         correctAnswer = false;
       }
     })
     var questionScore;
-    if(this._question.config.partial_scoring){
+    if (this._question.config.partial_scoring) {
       questionScore = (correctAnswersCount / totalOptions) * this._question.config.max_score;
-    }else{
-      if((correctAnswersCount / totalOptions) == 1){
+    } else {
+      if ((correctAnswersCount / totalOptions) == 1) {
         questionScore = this._question.config.max_score;
-      }else{
+      } else {
         questionScore = 0
       }
     }
@@ -99,11 +99,12 @@ org.ekstep.questionunitseq.RendererPlugin = org.ekstep.contentrenderer.questionU
     if (_.isFunction(callback)) {
       callback(result);
     }
-    EkstepRendererAPI.dispatchEvent('org.ekstep.questionset:saveQuestionState', result.state);
-    QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.ASSESSEND, result); // eslint-disable-line no-undef
   },
   logTelemetryItemResponse: function (data) {
-    QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.RESPONSE, {"type": "INPUT", "values": data});
+    QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.RESPONSE, {
+      "type": "INPUT",
+      "values": data
+    });
   }
 });
 //# sourceURL=questionunit.sequence.renderer.plugin.js
